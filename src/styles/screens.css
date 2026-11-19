@@ -1,0 +1,195 @@
+.lead {
+  margin-top: 6px;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Welcome */
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 16px;
+  border-radius: var(--radius-lg);
+  background: var(--primary-fill);
+  color: var(--on-primary);
+}
+.hero > div {
+  flex: 1;
+}
+.hero h2 {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+.hero p {
+  margin-top: 6px;
+}
+.hero-badge {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #fff;
+  color: #005aaa; /* fixed: sits on the white disc in both themes */
+}
+
+/* Choose package */
+.packages {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.package {
+  min-height: 72px;
+  padding: 12px 16px;
+  border-width: 1.5px;
+}
+.package[aria-checked='true'] {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+}
+.package:active:not(:disabled) {
+  border-radius: var(--radius-lg);
+}
+.package-price {
+  text-align: right;
+}
+.package-price strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--primary);
+}
+.radio {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid var(--text-disabled);
+  border-radius: 50%;
+}
+[aria-checked='true'] > .radio {
+  border-color: var(--primary);
+  background: radial-gradient(var(--primary) 0 4.5px, transparent 5px);
+}
+
+/* Confirm */
+.terms {
+  padding: 16px;
+}
+.terms p {
+  margin-top: 6px;
+}
+
+/* Registered and payment result */
+.celebrate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 8px 4px;
+  text-align: center;
+}
+.celebrate .sub {
+  font-size: 13px;
+}
+.failed {
+  color: var(--danger);
+}
+
+/* Policy home */
+.holder-name {
+  font-size: 16px;
+}
+.policy-card {
+  padding: 16px 12px 12px;
+  border-radius: var(--radius-lg);
+  background: var(--primary-fill);
+  color: var(--on-primary);
+}
+.policy-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 4px;
+}
+.policy-card h2 {
+  font-size: 18px;
+  font-weight: 500;
+}
+.policy-card p {
+  font-size: 11px;
+  opacity: 0.9;
+}
+.policy-card-figures {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  color: var(--text);
+}
+.policy-card-figures dt {
+  font-size: 11px;
+  color: var(--text-sub);
+}
+.policy-card-figures dd {
+  font-size: 14px;
+  font-weight: 500;
+}
+.policy-card-figures div:last-child {
+  text-align: right;
+}
+.tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.tile {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  min-height: 96px;
+  padding: 12px;
+  text-align: left;
+}
+.tile .row-title {
+  font-size: 13px;
+}
+.tile:active {
+  background: var(--bg-muted);
+}
+
+/* Add member */
+.found {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: var(--radius-lg);
+  background: var(--success-bg);
+}
+.found h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--success);
+}
+.lookup-note {
+  font-size: 13px;
+}
+.lookup-note .row-link {
+  font-size: inherit;
+}

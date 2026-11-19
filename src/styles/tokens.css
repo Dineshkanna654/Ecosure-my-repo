@@ -1,0 +1,75 @@
+/* Every colour in the app is declared here, once, with a light and a dark value.
+   Components use the variables only. Light values are the Figma "Eco_*" styles;
+   Figma has no dark frames, so the dark values are derived. */
+:root {
+  --bg: #ffffff; /* Eco_White */
+  --bg-muted: #f3f4f4; /* Eco_Main_BG */
+  --text: #333333; /* Eco_Dark_Grey */
+  --text-sub: #555555; /* Eco_Sub_Heading,Icon */
+  --text-disabled: #9a9a9a;
+  --primary: #005aaa; /* Eco_Blue: text, icons, borders */
+  --primary-fill: #005aaa; /* filled buttons and cards */
+  --on-primary: #ffffff;
+  --primary-soft: #e2e7ed; /* Eco_Blue_BG,Divider */
+  --line: #e3e6ea;
+  --success: #1a9f53;
+  --success-fill: #22b15b;
+  --success-bg: #edfff4; /* Eco_BG_Green */
+  --warning: #a36a00;
+  --warning-bg: #fff3d1;
+  --danger: #c5281c;
+  --disabled-fill: #c4c4c4;
+
+  --radius-sm: 4px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 20px;
+  --gutter: 16px;
+  --touch: 44px;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #0e1116;
+    --bg-muted: #181c23;
+    --text: #eaeef3;
+    --text-sub: #aab3bf;
+    --text-disabled: #6c7582;
+    --primary: #6fb1f2;
+    --primary-fill: #1668b8;
+    --on-primary: #ffffff;
+    --primary-soft: #1c2a3b;
+    --line: #2a313c;
+    --success: #4fd08a;
+    --success-fill: #1f9e52;
+    --success-bg: #10291c;
+    --warning: #f2c14e;
+    --warning-bg: #3a2e0e;
+    --danger: #ff8a80;
+    --disabled-fill: #3a414c;
+    color-scheme: dark;
+  }
+}
+
+/* The theme EcoCash sets wins over the phone setting. Same dark values. */
+html[data-theme='dark'] {
+  --bg: #0e1116;
+  --bg-muted: #181c23;
+  --text: #eaeef3;
+  --text-sub: #aab3bf;
+  --text-disabled: #6c7582;
+  --primary: #6fb1f2;
+  --primary-fill: #1668b8;
+  --on-primary: #ffffff;
+  --primary-soft: #1c2a3b;
+  --line: #2a313c;
+  --success: #4fd08a;
+  --success-fill: #1f9e52;
+  --success-bg: #10291c;
+  --warning: #f2c14e;
+  --warning-bg: #3a2e0e;
+  --danger: #ff8a80;
+  --disabled-fill: #3a414c;
+  color-scheme: dark;
+}

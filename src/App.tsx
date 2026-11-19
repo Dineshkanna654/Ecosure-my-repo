@@ -1,122 +1,84 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useMemo, useState } from 'react'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { api } from './api/client'
+import type { PackageId } from './api/types'
+import { Screen } from './components/Screen'
+import { ErrorState, Loading } from './components/StateViews'
+import { useAsync } from './lib/useAsync'
+import { useHost } from './sdk/context'
+import { readIdentity } from './sdk/identity'
+import { isDismissal } from './sdk/types'
+import { AppStateContext } from './state'
+import { AddMember } from './screens/AddMember'
+import { ChoosePackage } from './screens/ChoosePackage'
+import { ConfirmDetails } from './screens/ConfirmDetails'
+import { MakePayment } from './screens/MakePayment'
+import { ManagePolicy } from './screens/ManagePolicy'
+import { PaymentResult } from './screens/PaymentResult'
+import { PolicyHome } from './screens/PolicyHome'
+import { Registered } from './screens/Registered'
+import { Welcome } from './screens/Welcome'
 
-function App() {
-  const [count, setCount] = useState(0)
+function SignedIn() {
+  const { sdk } = useHost()
+  // Single sign-on. EcoCash issues the identity token; the customer's details are
+  // read from it, and our server verifies it to open a session.
+  const session = useAsync(async () => {
+    const { token } = await sdk.fetchAuthToken()
+    const customer = readIdentity(token)
+    await api.openSession(token)
+    return customer
+  })
+  const [draftPackage, setDraftPackage] = useState<PackageId>('plus')
+  const [enrolled, setEnrolled] = useState(false)
+
+  const customer = session.state.status === 'ready' ? session.state.data : null
+  const value = useMemo(
+    () => customer && { customer, draftPackage, setDraftPackage, enrolled, setEnrolled },
+    [customer, draftPackage, enrolled],
+  )
+
+  if (!value) {
+    return (
+      <Screen title="EcoSure">
+        {session.state.status === 'error' ? (
+          <ErrorState
+            message={
+              isDismissal(session.state.error)
+                ? 'EcoSure needs your EcoCash details to find or open your policy.'
+                : 'We could not sign you in. Please try again.'
+            }
+            onRetry={session.reload}
+          />
+        ) : (
+          <Loading />
+        )}
+      </Screen>
+    )
+  }
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+    <AppStateContext value={value}>
+      <Routes>
+        <Route path="/" element={<Welcome />} />
+        <Route path="/med/package" element={<ChoosePackage />} />
+        <Route path="/med/confirm" element={<ConfirmDetails />} />
+        <Route path="/med/registered" element={<Registered />} />
+        <Route path="/policy" element={<PolicyHome />} />
+        <Route path="/policy/pay" element={<MakePayment />} />
+        <Route path="/policy/pay/result" element={<PaymentResult />} />
+        <Route path="/policy/manage" element={<ManagePolicy />} />
+        <Route path="/policy/manage/add-member" element={<AddMember />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </AppStateContext>
   )
 }
 
-export default App
+export default function App() {
+  return (
+    <BrowserRouter>
+      <SignedIn />
+    </BrowserRouter>
+  )
+}
